@@ -1,0 +1,1332 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/matsonj/mviz/main/schema/mviz.v1.schema.json",
+  "title": "mviz Chart Specification",
+  "description": "Schema for mviz data visualization specs (v1.x)",
+  "version": "1.0.0",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/BarChart"
+    },
+    {
+      "$ref": "#/$defs/LineChart"
+    },
+    {
+      "$ref": "#/$defs/AreaChart"
+    },
+    {
+      "$ref": "#/$defs/PieChart"
+    },
+    {
+      "$ref": "#/$defs/ScatterChart"
+    },
+    {
+      "$ref": "#/$defs/BubbleChart"
+    },
+    {
+      "$ref": "#/$defs/BoxplotChart"
+    },
+    {
+      "$ref": "#/$defs/HistogramChart"
+    },
+    {
+      "$ref": "#/$defs/WaterfallChart"
+    },
+    {
+      "$ref": "#/$defs/XmrChart"
+    },
+    {
+      "$ref": "#/$defs/SankeyChart"
+    },
+    {
+      "$ref": "#/$defs/FunnelChart"
+    },
+    {
+      "$ref": "#/$defs/HeatmapChart"
+    },
+    {
+      "$ref": "#/$defs/CalendarChart"
+    },
+    {
+      "$ref": "#/$defs/SparklineChart"
+    },
+    {
+      "$ref": "#/$defs/ComboChart"
+    },
+    {
+      "$ref": "#/$defs/DumbbellChart"
+    },
+    {
+      "$ref": "#/$defs/BigValue"
+    },
+    {
+      "$ref": "#/$defs/Delta"
+    },
+    {
+      "$ref": "#/$defs/Alert"
+    },
+    {
+      "$ref": "#/$defs/Note"
+    },
+    {
+      "$ref": "#/$defs/Text"
+    },
+    {
+      "$ref": "#/$defs/Textarea"
+    },
+    {
+      "$ref": "#/$defs/EmptySpace"
+    },
+    {
+      "$ref": "#/$defs/Table"
+    }
+  ],
+  "$defs": {
+    "Theme": {
+      "enum": [
+        "light",
+        "dark"
+      ]
+    },
+    "FormatOption": {
+      "enum": [
+        "auto",
+        "usd_auto",
+        "usd",
+        "usd0k",
+        "usd0m",
+        "usd0b",
+        "num0",
+        "num1",
+        "num0k",
+        "num0m",
+        "num0b",
+        "pct",
+        "pct0",
+        "pct1"
+      ]
+    },
+    "YField": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      ]
+    },
+    "DataArray": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "ColumnarData": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          }
+        }
+      },
+      "required": [
+        "columns",
+        "rows"
+      ]
+    },
+    "BarChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "bar"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          }
+        },
+        "x": {
+          "type": "string"
+        },
+        "y": {
+          "$ref": "#/$defs/YField"
+        },
+        "title": {
+          "type": "string"
+        },
+        "horizontal": {
+          "type": "boolean"
+        },
+        "stacked": {
+          "type": "boolean"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "yMin": {
+          "type": "number"
+        },
+        "yMax": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LineChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "line"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          }
+        },
+        "x": {
+          "type": "string"
+        },
+        "y": {
+          "$ref": "#/$defs/YField"
+        },
+        "title": {
+          "type": "string"
+        },
+        "smooth": {
+          "type": "boolean"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "yMin": {
+          "type": "number"
+        },
+        "yMax": {
+          "type": "number"
+        },
+        "xAxisType": {
+          "enum": [
+            "category",
+            "time",
+            "value"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "AreaChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "area"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          }
+        },
+        "x": {
+          "type": "string"
+        },
+        "y": {
+          "$ref": "#/$defs/YField"
+        },
+        "title": {
+          "type": "string"
+        },
+        "stacked": {
+          "type": "boolean"
+        },
+        "smooth": {
+          "type": "boolean"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "yMin": {
+          "type": "number"
+        },
+        "yMax": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PieChart": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "pie"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "name": {
+          "type": "string",
+          "default": "name"
+        },
+        "value": {
+          "type": "string",
+          "default": "value"
+        },
+        "title": {
+          "type": "string"
+        },
+        "donut": {
+          "type": "boolean"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ScatterChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "scatter"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "x": {
+          "type": "string"
+        },
+        "y": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        },
+        "xFormat": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "yFormat": {
+          "$ref": "#/$defs/FormatOption"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BubbleChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "x",
+        "y",
+        "size"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "bubble"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "x": {
+          "type": "string"
+        },
+        "y": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        },
+        "xFormat": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "yFormat": {
+          "$ref": "#/$defs/FormatOption"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BoxplotChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data",
+        "categories"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "boxplot"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 5,
+            "maxItems": 5,
+            "description": "[min, Q1, median, Q3, max]"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "HistogramChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "histogram"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            {
+              "$ref": "#/$defs/DataArray"
+            }
+          ]
+        },
+        "value": {
+          "type": "string"
+        },
+        "bins": {
+          "type": "integer",
+          "default": 10
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "WaterfallChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "waterfall"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "type": {
+                "enum": [
+                  "total",
+                  "subtotal"
+                ]
+              }
+            }
+          }
+        },
+        "name": {
+          "type": "string",
+          "default": "name"
+        },
+        "value": {
+          "type": "string",
+          "default": "value"
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "XmrChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "xmr"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            {
+              "$ref": "#/$defs/DataArray"
+            }
+          ]
+        },
+        "value": {
+          "type": "string",
+          "default": "value"
+        },
+        "label": {
+          "type": "string",
+          "default": "label"
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        },
+        "nelson_rules": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "SankeyChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "sankey"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "source",
+              "target",
+              "value"
+            ],
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FunnelChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "funnel"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "HeatmapChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data",
+        "xCategories",
+        "yCategories"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "heatmap"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "x": {},
+                  "y": {},
+                  "value": {
+                    "type": "number"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "xCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "yCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CalendarChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data",
+        "year"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "calendar"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "date",
+              "value"
+            ],
+            "properties": {
+              "date": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "year": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SparklineChart": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "sparkline"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            {
+              "$ref": "#/$defs/DataArray"
+            }
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "sparkType": {
+          "enum": [
+            "line",
+            "bar",
+            "area",
+            "pct",
+            "pct_bar"
+          ],
+          "default": "line"
+        },
+        "title": {
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ComboChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "x"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "combo"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "x": {
+          "type": "string"
+        },
+        "bar": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "line": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "dualAxis": {
+          "type": "boolean"
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "secondaryFormat": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "yMin": {
+          "type": "number"
+        },
+        "yMax": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DumbbellChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "data",
+        "category",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "dumbbell"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "category": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        },
+        "startLabel": {
+          "type": "string"
+        },
+        "endLabel": {
+          "type": "string"
+        },
+        "higherIsBetter": {
+          "type": "boolean",
+          "default": true
+        },
+        "showValues": {
+          "type": "boolean",
+          "default": true
+        },
+        "title": {
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "BigValue": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "big_value"
+        },
+        "value": {
+          "type": "number"
+        },
+        "label": {
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "comparison": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "label": {
+              "type": "string"
+            },
+            "format": {
+              "$ref": "#/$defs/FormatOption"
+            }
+          }
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Delta": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "delta"
+        },
+        "value": {
+          "type": "number"
+        },
+        "label": {
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "positiveIsGood": {
+          "type": "boolean",
+          "default": true
+        },
+        "comparison": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "label": {
+              "type": "string"
+            },
+            "format": {
+              "$ref": "#/$defs/FormatOption"
+            }
+          }
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Alert": {
+      "type": "object",
+      "required": [
+        "type",
+        "message"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "alert"
+        },
+        "message": {
+          "type": "string"
+        },
+        "alertType": {
+          "enum": [
+            "info",
+            "success",
+            "warning",
+            "error"
+          ],
+          "default": "info"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Note": {
+      "type": "object",
+      "required": [
+        "type",
+        "content"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "note"
+        },
+        "content": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "noteType": {
+          "enum": [
+            "default",
+            "warning",
+            "tip"
+          ],
+          "default": "default"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Text": {
+      "type": "object",
+      "required": [
+        "type",
+        "content"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "text"
+        },
+        "content": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Textarea": {
+      "type": "object",
+      "required": [
+        "type",
+        "content"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "textarea"
+        },
+        "content": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EmptySpace": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "empty_space"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TableColumnDef": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "align": {
+          "enum": [
+            "left",
+            "center",
+            "right"
+          ]
+        },
+        "fmt": {
+          "$ref": "#/$defs/FormatOption"
+        },
+        "bold": {
+          "type": "boolean"
+        },
+        "italic": {
+          "type": "boolean"
+        },
+        "type": {
+          "enum": [
+            "sparkline",
+            "heatmap"
+          ]
+        },
+        "sparkType": {
+          "enum": [
+            "line",
+            "bar",
+            "area",
+            "pct_bar",
+            "dumbbell"
+          ]
+        },
+        "width": {
+          "type": "integer"
+        },
+        "higherIsBetter": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Table": {
+      "type": "object",
+      "required": [
+        "type",
+        "data"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "table"
+        },
+        "data": {
+          "$ref": "#/$defs/DataArray"
+        },
+        "title": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TableColumnDef"
+          }
+        },
+        "striped": {
+          "type": "boolean",
+          "default": true
+        },
+        "compact": {
+          "type": "boolean"
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
