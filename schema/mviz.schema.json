@@ -566,21 +566,39 @@
                 "enum": [
                   "total",
                   "subtotal"
-                ]
+                ],
+                "description": "Mark bar as total or subtotal (anchored at zero)"
+              },
+              "isTotal": {
+                "type": "boolean",
+                "description": "Alternative to type: 'total' - marks bar as total (anchored at zero)"
               }
             }
           }
         },
         "name": {
           "type": "string",
-          "default": "name"
+          "default": "name",
+          "description": "Field name for category labels"
         },
         "value": {
           "type": "string",
-          "default": "value"
+          "default": "value",
+          "description": "Field name for numeric values"
+        },
+        "x": {
+          "type": "string",
+          "description": "Alias for 'name' field (consistent with other chart types)"
+        },
+        "y": {
+          "type": "string",
+          "description": "Alias for 'value' field (consistent with other chart types)"
         },
         "title": {
           "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/FormatOption"
         },
         "theme": {
           "$ref": "#/$defs/Theme"
