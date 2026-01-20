@@ -1,6 +1,6 @@
 ---
-name: mviz-full
-description: Full-featured charts and dashboards with 16 chart types, 8 components, and comprehensive reference docs
+name: mviz
+description: Generate clean, data-focused charts and dashboards from compact JSON specs
 ---
 
 # mviz
