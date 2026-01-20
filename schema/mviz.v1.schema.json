@@ -391,6 +391,10 @@
         "y": {
           "type": "string"
         },
+        "series": {
+          "type": "string",
+          "description": "Field name to group data points by (creates multiple colored series)"
+        },
         "title": {
           "type": "string"
         },
@@ -1044,8 +1048,13 @@
         "value": {
           "type": "number"
         },
+        "title": {
+          "type": "string",
+          "description": "If only title is provided (no label), used as label below number. If both provided, title becomes H2 header above."
+        },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Text displayed below the number"
         },
         "format": {
           "$ref": "#/$defs/FormatOption"
@@ -1087,8 +1096,13 @@
         "value": {
           "type": "number"
         },
+        "title": {
+          "type": "string",
+          "description": "If only title is provided (no label), used as label below value. If both provided, title becomes header above."
+        },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Text displayed below the delta value"
         },
         "format": {
           "$ref": "#/$defs/FormatOption"
