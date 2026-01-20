@@ -1,6 +1,6 @@
 ---
-name: mviz
-description: Generate clean, data-focused charts and dashboards with high data-ink ratio and minimal visual noise
+name: mviz-full
+description: Full-featured charts and dashboards with 16 chart types, 8 components, and comprehensive reference docs
 ---
 
 # mviz
