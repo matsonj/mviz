@@ -7,6 +7,12 @@ description: Generate clean, data-focused charts and dashboards from compact JSO
 
 Generate clean, data-focused charts and dashboards from compact JSON specs or markdown. Maximizes data-ink ratio with minimal chartjunk, gridlines, and decorative elements. Uses a 16-column grid layout system.
 
+## Setup
+
+No installation required. Use `npx mviz` which auto-downloads from npm.
+
+For faster repeated use, install globally: `npm install -g mviz`
+
 ## What This Skill Does
 
 Converts minimal JSON specifications into standalone HTML visualizations using ECharts. Instead of writing 50-100 lines of chart code, write a compact spec that gets expanded into a full HTML artifact with professional styling.
@@ -24,13 +30,19 @@ Converts minimal JSON specifications into standalone HTML visualizations using E
 ### Single Chart (JSON)
 
 ```bash
-echo '<json_spec>' | node dist/cli.js > chart.html
+echo '<json_spec>' | npx mviz > chart.html
+```
+
+### Dashboard from Markdown
+
+```bash
+npx mviz dashboard.md > dashboard.html
 ```
 
 ### Dashboard from Folder
 
 ```bash
-node dist/cli.js my-dashboard/ > dashboard.html
+npx mviz my-dashboard/ > dashboard.html
 ```
 
 ## 16-Column Grid System
