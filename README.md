@@ -32,9 +32,13 @@ If you do not have a database available, you can also load CSV files directly, a
 
 ### 2. Add the Skill
 
-**Claude Web or Desktop:** Download [`mviz.skill`](https://gist.github.com/matsonj/1c13b656bca20b1d2cc6260309d8eb40) and add it to your project knowledge.
+```bash
+npx add-skill matsonj/mviz
+```
 
-**Claude Code:** Clone this repo and work from the directory. Use `mviz-full.skill` for access to all chart types.
+This uses [add-skill](https://github.com/vercel-labs/add-skill) to install the mviz skill to your coding agent (Claude Code, Cursor, Codex, etc.).
+
+**Manual installation:** If the above doesn't work, download [`mviz.skill`](https://gist.github.com/matsonj/1c13b656bca20b1d2cc6260309d8eb40) and add it to your project knowledge (Claude Web/Desktop) or clone this repo and work from the directory (Claude Code).
 
 ### 3. Ask Claude
 
