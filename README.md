@@ -34,9 +34,16 @@ If you do not have a database available, you can also load CSV files directly, a
 
 **Claude Web or Desktop:** Download [`mviz.skill`](https://gist.github.com/matsonj/1c13b656bca20b1d2cc6260309d8eb40) and add it to your project knowledge.
 
-**Claude Code:** Clone this repo and work from the directory. Use `mviz-full.skill` for access to all chart types.
+**Claude Code:** Run `npx add-skill matsonj/mviz` or clone this repo and work from the directory.
 
-### 3. Ask Claude
+### 3. Effective Use Tips
+
+The best analysis follows four steps:
+
+1. **Build context** — Get the data right. Query, filter, and explore until you understand what you're looking at.
+2. **Develop narrative** — What's the story? What question are you answering? What pattern matters?
+3. **First pass on viz** — Create an initial visualization. Don't overthink it.
+4. **Refine based on what doesn't work** — Iterate. Change chart types, adjust formatting, add context.
 
 Start by exploring your data with natural questions. Claude writes SQL queries behind the scenes and brings the results into context:
 
@@ -58,9 +65,9 @@ Refine your analysis by asking follow-up questions:
 
 > *"Add a table showing the top 5 products by growth rate"*
 
-### mviz specific guidance
+### mviz Specific Guidance
 
- mviz uses a 16-column grid.
+mviz uses a 16-column grid.
 
 > *"Make the bar chart wider"*
 
@@ -297,7 +304,6 @@ chart-skill/
 │   └── layout/             # Report parser
 │       ├── parser.ts       # Markdown layout parsing
 │       └── templates.ts    # HTML templates
-├── build_skill.py           # Builds .skill package for distribution
 ├── tests/
 │   ├── harness/            # Visual test harness markdown
 │   ├── dashboard-inline/    # Test dashboard with inline JSON
@@ -334,26 +340,13 @@ npm run build               # Build TypeScript
 npm run typecheck           # Type checking only
 ```
 
-## Skill Bundles
+## Skill Bundle
 
-Two skill bundles are available for different use cases:
-
-### Compact Skill (`skill-bundle-compact/`) — Default
-
-Optimized for Claude for Web with ~92% fewer tokens (~750 vs ~9,200). This is the default `mviz.skill` published in releases. Supports essential types only:
+The skill bundle is optimized for Claude for Web with minimal token usage (~750 tokens). Supports essential types:
 - **Charts:** bar, line, scatter
 - **Components:** table (with sparklines), note, textarea, empty_space
 
-Best for:
-- Claude for Web projects with limited context
-- Data exploration loops where token efficiency matters
-- Simple reports with standard visualizations
-
-### Full Skill (`skill-bundle/`)
-
-Complete skill with all 16 chart types and 8 UI components. Best for:
-- Claude Code (CLI) where token limits are generous
-- Complex reports requiring specialized chart types
+For additional chart types (pie, area, heatmap, sankey, etc.), Claude can reference the TypeScript source code in this repository.
 
 ## Using with Claude
 
