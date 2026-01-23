@@ -75,7 +75,62 @@ End sections by noting what might be worth exploring, not by drawing conclusions
 
 ## Layout Best Practices
 
-**Dense, information-rich layouts:**
+### 16-Column Grid System
+
+Components are sized using `size=[cols,rows]` syntax. The grid is 16 columns wide, with row units approximately 32px tall.
+
+**Height Guidelines:**
+| Row Units | Approximate Height | Good For |
+|-----------|-------------------|----------|
+| 2 | ~64px | KPIs, single-line notes |
+| 4 | ~128px | Small tables, text blocks |
+| 5-6 | ~160-192px | Standard charts |
+| 8+ | ~256px+ | Dense tables, detailed charts |
+
+For charts with many categories (10+ bars, 10+ rows in dumbbell), increase row units to prevent compression.
+
+### Side-by-Side Layout
+
+**Critical:** To place components side-by-side, their code blocks must have NO blank lines between them:
+
+````markdown
+```bar size=[8,5]
+{"title": "Chart A", ...}
+```
+```line size=[8,5]
+{"title": "Chart B", ...}
+```
+````
+
+This renders Chart A and Chart B on the same row. Adding a blank line between them would put them on separate rows.
+
+### Headings and Section Breaks
+
+| Syntax | Effect |
+|--------|--------|
+| `# H1` | Major section with page break (for print/PDF) |
+| `## H2` | Section title, visual divider, no page break |
+| `### H3` | Light inline header (subtle, smaller text) |
+| `---` | Untitled section break: visual divider only |
+| `===` | Explicit page break: forces new page in PDF |
+
+**Section vs Page Breaks:**
+- Use `---` to separate logical sections visually. Content flows naturally to the next page when needed.
+- Use `===` only when you explicitly want to force a new page (e.g., separating chapters or major report sections for PDF output).
+- Never use `===` by default. Only add page breaks when the user specifically requests them.
+
+### Recommended Size Pairings
+
+| Layout Goal | Components | Sizes |
+|-------------|------------|-------|
+| 4 KPIs in a row | 4× `big_value` | [4,2] each |
+| 5 KPIs in a row | 4× `big_value` + 1 wider | [3,2] + [4,2] |
+| KPI + context | `big_value` + `textarea` | [3,2] + [13,2] |
+| KPI + chart | `big_value` + `bar` | [4,2] + [12,5] |
+| Two charts side-by-side | 2× chart | [8,5] each |
+
+### Dense, Information-Rich Layouts
+
 1. Pack 4-5 KPIs per row using `size=[3,2]` or `size=[4,2]`
 2. Use compact number formats (`usd0m` not `usd`)
 3. Place charts side-by-side with `size=[8,6]`

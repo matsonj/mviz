@@ -304,6 +304,7 @@ chart-skill/
 │   └── layout/             # Report parser
 │       ├── parser.ts       # Markdown layout parsing
 │       └── templates.ts    # HTML templates
+├── build_skill.py           # Builds .skill package for distribution
 ├── tests/
 │   ├── harness/            # Visual test harness markdown
 │   ├── dashboard-inline/    # Test dashboard with inline JSON
@@ -342,11 +343,11 @@ npm run typecheck           # Type checking only
 
 ## Skill Bundle
 
-The skill bundle is optimized for Claude for Web with minimal token usage (~750 tokens). Supports essential types:
+The skill bundle (`skill-bundle-compact/`) is optimized for Claude for Web with minimal token usage (~750 tokens). Supports essential types:
 - **Charts:** bar, line, scatter
 - **Components:** table (with sparklines), note, textarea, empty_space
 
-For additional chart types (pie, area, heatmap, sankey, etc.), Claude can reference the TypeScript source code in this repository.
+For additional chart types (pie, area, heatmap, sankey, etc.), Claude can reference the TypeScript source code in this repository. See `Best_practices.md` for layout guidance and visualization principles.
 
 ## Using with Claude
 
