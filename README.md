@@ -91,7 +91,7 @@ Each iteration builds on your existing context. When you're done, save the HTML 
 | `area` | Simple or stacked area charts | |
 | `pie` | Pie or donut charts | |
 | `scatter` | 2D scatter plots | ✓ |
-| `bubble` | Scatter with size dimension | |
+| `bubble` | Scatter with size dimension (auto-detects categorical axes) | |
 | `boxplot` | Statistical box plots | |
 | `histogram` | Distribution visualization | |
 | `sankey` | Flow diagrams | |
@@ -101,7 +101,7 @@ Each iteration builds on your existing context. When you're done, save the HTML 
 | `sparkline` | Compact inline charts | |
 | `combo` | Combined bar + line with dual axes | |
 | `waterfall` | Cumulative effect charts | |
-| `xmr` | Statistical control charts | |
+| `xmr` | Statistical control charts (supports `yMin`/`yMax`) | |
 | `dumbbell` | Before/after comparisons with directional color-coding | |
 
 ## UI Components
@@ -171,8 +171,9 @@ title: My Report
 ### Layout Rules
 
 - `# Title` creates a new section (first one also sets page title)
-- `## Section` creates a subsection with divider
-- `---` creates a section break (untitled)
+- `## Section` creates a subsection title (no visual divider)
+- `---` creates a visual section divider
+- `===` creates a page break for printing
 - `size=[cols,rows]` controls 16-column grid layout
 - `size=auto` auto-calculates size based on data
 - `file=path` references external JSON
@@ -329,8 +330,19 @@ The chart generator outputs helpful warnings to stderr when issues are detected:
 | `Unknown component type 'bars'` | Typo in chart type | Use suggested type (e.g., `bar` not `bars`) |
 | `Cannot resolve 'file=...'` | File reference without base directory | Use file path argument or inline JSON |
 | `Row exceeds 16 columns` | Too many components in one row | Reduce component widths or split into rows |
+| `Invalid value for 'value' in big_value` | Wrong data type (e.g., string instead of number) | Ensure values match expected types |
 
 Warnings include context like content previews, suggestions for similar types, and section/row information to help locate issues.
+
+## CLI Options
+
+```bash
+npx mviz dashboard.md > output.html     # Generate HTML
+npx mviz --lint dashboard.md            # Validate only (no output)
+npx mviz -l spec.json                   # Short form of --lint
+```
+
+The `--lint` flag validates your spec without generating HTML output. Useful for CI/CD pipelines or quick validation.
 
 ## Running Tests
 

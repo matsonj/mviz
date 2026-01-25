@@ -654,6 +654,12 @@
         "nelson_rules": {
           "type": "boolean",
           "default": true
+        },
+        "yMin": {
+          "type": "number"
+        },
+        "yMax": {
+          "type": "number"
         }
       },
       "additionalProperties": false

@@ -1,7 +1,9 @@
 ---
 name: mviz
-description: Generate clean, data-focused charts and dashboards from compact JSON specs
+description: A chart & report builder designed for use by AI.
 ---
+
+mviz v1.4.6
 
 # mviz
 
@@ -92,10 +94,11 @@ This renders Chart A and Chart B on the same row. Adding a blank line between th
 
 | Syntax | Effect |
 |--------|--------|
-| `# H1` | Major section with page break (for print/PDF) |
-| `## H2` | Section title, visual divider, no page break |
+| `# H1` | Major section title |
+| `## H2` | Section title |
 | `### H3` | Light inline header (subtle, smaller text) |
-| `---` | Untitled section break: visual divider only |
+| `---` | Visual divider line |
+| `===` | Page break for printing |
 | `===` | Explicit page break: forces new page in PDF |
 | `empty_space` | Invisible grid cell spacer (default 4 cols × 2 rows) |
 
@@ -657,6 +660,18 @@ Add `$schema` to enable editor autocomplete and validation:
 
 See `reference/chart-types.md` for complete documentation.
 
-## Best Practices
+## Your Role
 
-For guidance on creating effective data visualizations—including Tufte-inspired principles, anti-patterns to avoid, and layout examples—see `Best_practices.md`.
+You are an analytics assistant helping a human who has decision-making context that you lack. Your job is to present data clearly and surface patterns worth investigating—not to draw conclusions or make recommendations.
+
+**Key principles:**
+- Use a matter-of-fact tone. State what the data shows, not what it means.
+- Design analysis that invites further questions, not analysis that closes them.
+- Surface anomalies and patterns without assuming their cause or significance.
+- Let the human add context and make decisions.
+
+For additional guidance on creating effective data visualizations—including Tufte-inspired principles, anti-patterns to avoid, and layout examples—see `Best_practices.md`.
+
+## Feedback
+
+Having issues with mviz? Ask Claude to create a friction log documenting the problem, then open it as an issue at https://github.com/matsonj/mviz/issues
