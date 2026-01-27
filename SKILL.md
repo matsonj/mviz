@@ -3,7 +3,7 @@ name: mviz
 description: A chart & report builder designed for use by AI.
 ---
 
-mviz v1.4.6
+mviz v1.4.7
 
 # mviz
 
@@ -11,7 +11,7 @@ Generate clean, data-focused charts and dashboards from compact JSON specs or ma
 
 ## Setup
 
-No installation required. Use `npx mviz` which auto-downloads from npm.
+No installation required. Use `npx -y -q mviz` which auto-downloads from npm. The `-q` flag reduces npm output while still showing lint errors.
 
 For faster repeated use, install globally: `npm install -g mviz`
 
@@ -32,19 +32,19 @@ Converts minimal JSON specifications into standalone HTML visualizations using E
 ### Single Chart (JSON)
 
 ```bash
-echo '<json_spec>' | npx mviz > chart.html
+echo '<json_spec>' | npx -y -q mviz > chart.html
 ```
 
 ### Dashboard from Markdown
 
 ```bash
-npx mviz dashboard.md > dashboard.html
+npx -y -q mviz dashboard.md > dashboard.html
 ```
 
 ### Dashboard from Folder
 
 ```bash
-npx mviz my-dashboard/ > dashboard.html
+npx -y -q mviz my-dashboard/ > dashboard.html
 ```
 
 ## 16-Column Grid System
@@ -435,6 +435,41 @@ Use `yMax` when:
 - Labels are being cut off at the top of the chart
 - You need headroom above the highest data point
 
+## Validation & Lint Rules
+
+The CLI validates specs automatically using built-in lint rules. Use `--lint` flag for validation-only mode:
+
+```bash
+npx -y -q mviz --lint dashboard.md  # Validate without generating HTML
+```
+
+### Lint Rules
+
+| Rule | Severity | Trigger |
+|------|----------|---------|
+| `required-fields` | warning | Missing required fields like `x`, `y`, or `data` |
+| `unknown-field` | warning | Field not recognized for the chart type |
+| `time-series-sorted` | error | Time series data not in chronological order |
+| `sankey-wrong-keys` | error | Using `from`/`to` instead of `source`/`target` |
+| `big-value-string` | error | Passing `"62.5%"` string instead of `0.625` number |
+| `duplicate-x-values` | warning | Duplicate values on x-axis |
+
+**Errors** exit with code 1. **Warnings** log to stderr but don't fail.
+
+### Common Fixes
+
+**Time series error:** Sort your data by date before passing to the chart.
+
+**Sankey wrong keys:** Use `source`, `target`, `value` in your data:
+```json
+{"source": "A", "target": "B", "value": 100}
+```
+
+**big_value string:** Pass numeric value with format option:
+```json
+{"type": "big_value", "value": 0.625, "format": "pct0", "label": "Rate"}
+```
+
 ## Troubleshooting
 
 ### Warning Messages
@@ -588,6 +623,35 @@ continuous: true
 | `continuous` | When `true`, removes section breaks between `#` headers for flowing layout |
 
 The theme toggle affects all charts globally - individual chart `theme` settings are ignored in favor of the global toggle.
+
+## Custom Themes
+
+Load custom brand colors and fonts from a YAML file:
+
+```bash
+npx -y -q mviz --theme my_theme.yaml dashboard.md > dashboard.html
+```
+
+Example theme file:
+```yaml
+name: brand-colors
+extends: light
+
+colors:
+  primary: "#1a73e8"
+  secondary: "#ea4335"
+
+palette:
+  - "#1a73e8"
+  - "#ea4335"
+  - "#fbbc04"
+
+fonts:
+  family: "'Roboto', sans-serif"
+  import: "https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+```
+
+Custom themes merge with defaults - only specify what you want to override.
 
 ## Print and PDF Support
 
