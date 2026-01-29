@@ -337,12 +337,12 @@ Warnings include context like content previews, suggestions for similar types, a
 ## CLI Options
 
 ```bash
-npx mviz dashboard.md > output.html     # Generate HTML
+npx mviz dashboard.md -o output.html    # Generate HTML (requires -o flag)
 npx mviz --lint dashboard.md            # Validate only (no output)
 npx mviz -l spec.json                   # Short form of --lint
 ```
 
-The `--lint` flag validates your spec without generating HTML output. Useful for CI/CD pipelines or quick validation.
+The `-o` flag is required and specifies the output file. The `--lint` flag validates your spec without generating HTML output. Useful for CI/CD pipelines or quick validation.
 
 ## Running Tests
 

@@ -441,6 +441,81 @@ Before/after comparison with directional color-coding.
 
 ---
 
+### mermaid
+
+Renders Mermaid diagram syntax to SVG or ASCII. Supports flowcharts, sequence diagrams, state diagrams, class diagrams, and ER diagrams.
+
+The `code` field accepts a string or array of strings (joined with newlines). Array format is easier to read and edit:
+
+**Flowchart (array format - recommended):**
+```json
+{
+  "type": "mermaid",
+  "title": "User Flow",
+  "code": [
+    "graph TD",
+    "  A[Start] --> B{Decision}",
+    "  B -->|Yes| C[Action]",
+    "  B -->|No| D[End]"
+  ]
+}
+```
+
+**Sequence diagram:**
+```json
+{
+  "type": "mermaid",
+  "title": "API Call",
+  "code": [
+    "sequenceDiagram",
+    "  Client->>Server: Request",
+    "  Server-->>Client: Response"
+  ]
+}
+```
+
+**ER diagram:**
+```json
+{
+  "type": "mermaid",
+  "title": "Data Model",
+  "code": [
+    "erDiagram",
+    "  CUSTOMER ||--o{ ORDER : places",
+    "  ORDER ||--|{ LINE_ITEM : contains",
+    "  PRODUCT ||--o{ LINE_ITEM : includes"
+  ]
+}
+```
+
+**ASCII rendering** (set `ascii: true` for text-based output):
+```json
+{
+  "type": "mermaid",
+  "title": "Process Flow",
+  "code": ["graph LR", "  A[Input] --> B[Process] --> C[Output]"],
+  "ascii": true
+}
+```
+
+**Pure ASCII** (no Unicode box-drawing characters, add `useAscii: true`):
+```json
+{
+  "type": "mermaid",
+  "title": "Simple Flow",
+  "code": ["graph LR", "  A --> B --> C"],
+  "ascii": true,
+  "useAscii": true
+}
+```
+
+**Lint rules** (these cause validation errors):
+- No `<br/>` tags in labels - they render as literal text
+- No quoted labels like `A["text"]` in flowcharts - quotes appear in output
+```
+
+---
+
 ## UI Components
 
 ### big_value
@@ -686,6 +761,7 @@ Data table with formatting. Supports inline sparklines and heatmap columns.
 |-----------|------|-|-----------|------|
 | `big_value`, `delta` | [4,2] | | `bar`, `line`, `area` | [8,5] |
 | `table`, `textarea` | [16,4] | | `dumbbell` | [12,6] |
+| `mermaid` | [8,5] | | | |
 | `alert`, `note` | [16,1] | | `empty_space` | [4,2] |
 
 **Auto-sizing:** Use `size=auto` to calculate from data.

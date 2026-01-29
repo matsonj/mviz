@@ -3,7 +3,7 @@ name: mviz
 description: A chart & report builder designed for use by AI.
 ---
 
-mviz v1.4.7
+mviz v1.5.0
 
 # mviz
 
@@ -130,6 +130,7 @@ This renders Chart A and Chart B on the same row. Adding a blank line between th
 | `textarea` | [16, 4] | Full width |
 | `calendar` | [16, 3] | Full width |
 | `xmr` | [16, 6] | Full width, tall |
+| `mermaid` | [8, 5] | Half width (use `ascii: true` for text art) |
 | `alert`, `note`, `text` | [16, 1] | Full width, single row |
 | `empty_space` | [4, 2] | Invisible spacer |
 
@@ -175,7 +176,7 @@ This creates a row with 5 KPIs (3+3+3+3+4 = 16 columns).
 
 ## Supported Types
 
-**Charts:** bar, line, area, pie, scatter, bubble, boxplot, histogram, waterfall, xmr, sankey, funnel, heatmap, calendar, sparkline, combo, dumbbell
+**Charts:** bar, line, area, pie, scatter, bubble, boxplot, histogram, waterfall, xmr, sankey, funnel, heatmap, calendar, sparkline, combo, dumbbell, mermaid
 
 **UI Components:** big_value, delta, alert, note, text, textarea, empty_space, table
 
@@ -359,6 +360,34 @@ Notes also support an optional `label` for bold prefix text:
 }
 ```
 
+**mermaid** - Diagrams from Mermaid syntax (flowcharts, sequence, state, class, ER). Use array for multi-line code:
+```json
+{
+  "type": "mermaid",
+  "title": "User Flow",
+  "code": [
+    "graph TD",
+    "  A[Start] --> B{Decision}",
+    "  B -->|Yes| C[Action]",
+    "  B -->|No| D[End]"
+  ]
+}
+```
+
+**mermaid (ASCII)** - ASCII/Unicode text-based diagrams (set `ascii: true`):
+```json
+{
+  "type": "mermaid",
+  "title": "Process Flow",
+  "code": ["graph LR", "  A[Input] --> B[Process] --> C[Output]"],
+  "ascii": true
+}
+```
+
+**Mermaid lint rules** (errors that will fail validation):
+- No `<br/>` tags in labels (render as literal text, not line breaks)
+- No quoted labels like `A["text"]` in flowcharts (quotes appear in output)
+
 ## Number Format Options
 
 | Format | Example | Use For |
@@ -453,6 +482,8 @@ npx -y -q mviz --lint dashboard.md  # Validate without generating HTML
 | `sankey-wrong-keys` | error | Using `from`/`to` instead of `source`/`target` |
 | `big-value-string` | error | Passing `"62.5%"` string instead of `0.625` number |
 | `duplicate-x-values` | warning | Duplicate values on x-axis |
+| `mermaid-no-br-tags` | error | `<br/>` tags in mermaid code (render as literal text) |
+| `mermaid-no-quoted-labels` | error | Quoted labels like `A["text"]` in flowcharts |
 
 **Errors** exit with code 1. **Warnings** log to stderr but don't fail.
 
