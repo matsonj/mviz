@@ -57,6 +57,9 @@
       "$ref": "#/$defs/DumbbellChart"
     },
     {
+      "$ref": "#/$defs/MermaidChart"
+    },
+    {
       "$ref": "#/$defs/BigValue"
     },
     {
@@ -1033,6 +1036,50 @@
         },
         "theme": {
           "$ref": "#/$defs/Theme"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MermaidChart": {
+      "type": "object",
+      "required": [
+        "type",
+        "code"
+      ],
+      "properties": {
+        "$schema": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "const": "mermaid"
+        },
+        "code": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ],
+          "description": "Mermaid diagram syntax as string or array of lines (joined with newlines)"
+        },
+        "title": {
+          "type": "string"
+        },
+        "height": {
+          "type": "number",
+          "default": 400
+        },
+        "theme": {
+          "$ref": "#/$defs/Theme"
+        },
+        "ascii": {
+          "type": "boolean",
+          "default": false,
+          "description": "Render as ASCII/Unicode text art instead of SVG"
+        },
+        "useAscii": {
+          "type": "boolean",
+          "default": false,
+          "description": "When ascii=true, use pure ASCII instead of Unicode box-drawing characters"
         }
       },
       "additionalProperties": false
