@@ -3,7 +3,7 @@ name: mviz
 description: A chart & report builder designed for use by AI.
 ---
 
-mviz v1.5.2
+mviz v1.5.3
 
 # mviz
 
