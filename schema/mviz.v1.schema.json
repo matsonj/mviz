@@ -398,6 +398,10 @@
           "type": "string",
           "description": "Field name to group data points by (creates multiple colored series)"
         },
+        "label": {
+          "type": "string",
+          "description": "Field name for point labels shown in tooltips"
+        },
         "title": {
           "type": "string"
         },
@@ -440,6 +444,10 @@
         },
         "size": {
           "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Field name for point labels shown in tooltips"
         },
         "title": {
           "type": "string"

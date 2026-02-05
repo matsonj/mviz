@@ -3,7 +3,7 @@ name: mviz
 description: A chart & report builder designed for use by AI.
 ---
 
-mviz v1.5.3
+mviz v1.5.4
 
 # mviz
 
@@ -60,8 +60,9 @@ Components are sized using `size=[cols,rows]` syntax:
 ```
 ````
 
-- **16 columns** total width
+- **16 columns** total width (both portrait and landscape)
 - **Row height**: ~32px per row unit (approximate - charts have padding)
+- **Page capacity**: Portrait [16c × 30r], Landscape [16c × 22r]
 - Components on same line share the row
 - Empty line = new row
 
@@ -643,7 +644,8 @@ Set the default theme in frontmatter:
 ---
 title: My Dashboard
 theme: dark
-continuous: true
+orientation: landscape
+print: true
 ---
 ```
 
@@ -651,7 +653,11 @@ continuous: true
 |--------|-------------|
 | `title` | Dashboard title displayed at top |
 | `theme` | `light` (default) or `dark` |
+| `orientation` | `portrait` (default) or `landscape` for print layout |
+| `print` | When `true`, requires explicit `size=[cols,rows]` on all components |
 | `continuous` | When `true`, removes section breaks between `#` headers for flowing layout |
+
+**Page capacity:** Portrait fits 30 row units, landscape fits 22 row units (Letter paper, 0.5" margins).
 
 The theme toggle affects all charts globally - individual chart `theme` settings are ignored in favor of the global toggle.
 
