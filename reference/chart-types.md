@@ -309,7 +309,7 @@ Funnel chart for conversion stages.
 {
   "type": "funnel",
   "title": "Sales Funnel",
-  "format": "usd_auto",
+  "format": "currency_auto",
   "data": [
     {"name": "Visitors", "value": 10000},
     {"name": "Leads", "value": 5000},
@@ -528,7 +528,7 @@ Large metric display for KPIs. Optional `comparison` shows change indicator.
   "type": "big_value",
   "value": 1250000,
   "label": "Total Revenue",
-  "format": "usd"
+  "format": "currency"
 }
 ```
 
@@ -549,7 +549,7 @@ Large metric display for KPIs. Optional `comparison` shows change indicator.
   "title": "Q4 Results",
   "value": 1250000,
   "label": "Total Revenue",
-  "format": "usd"
+  "format": "currency"
 }
 ```
 
@@ -559,7 +559,7 @@ Large metric display for KPIs. Optional `comparison` shows change indicator.
   "type": "big_value",
   "value": 1250000,
   "label": "Total Revenue",
-  "format": "usd",
+  "format": "currency",
   "comparison": {
     "value": 0.15,
     "label": "vs Last Month",
@@ -601,7 +601,7 @@ Change indicator with arrow. Green for positive (or red if `positiveIsGood: fals
   "title": "Q4 Impact",
   "value": -82769,
   "label": "Late vs On Time",
-  "format": "usd_auto"
+  "format": "currency_auto"
 }
 ```
 
@@ -695,7 +695,7 @@ Data table with formatting. Supports inline sparklines and heatmap columns.
   "title": "Sales Data",
   "columns": [
     {"id": "product", "title": "Product"},
-    {"id": "sales", "title": "Sales", "align": "right", "fmt": "usd"},
+    {"id": "sales", "title": "Sales", "align": "right", "fmt": "currency"},
     {"id": "margin", "title": "Margin", "align": "right", "fmt": "pct"}
   ],
   "data": [
@@ -711,7 +711,7 @@ Data table with formatting. Supports inline sparklines and heatmap columns.
   "type": "table",
   "columns": [
     {"id": "product", "title": "Product"},
-    {"id": "sales", "title": "Sales", "fmt": "usd0k"},
+    {"id": "sales", "title": "Sales", "fmt": "currency0k"},
     {"id": "trend", "title": "Trend", "type": "sparkline", "sparkType": "line"}
   ],
   "data": [
@@ -739,16 +739,16 @@ Data table with formatting. Supports inline sparklines and heatmap columns.
 | Format | Example | Description |
 |--------|---------|-------------|
 | `auto` | 1.000m | Smart auto-format (default) |
-| `usd_auto` | $1.000m | Smart auto-format with $ |
-| `usd` | $1,250,000 | Full dollars |
-| `usd0k` | $125k | Compact thousands |
-| `usd0m` | $1.2m | Compact millions |
+| `currency_auto` | $1.000m | Smart auto-format with currency symbol |
+| `currency` | $1,250,000 | Full currency |
+| `currency0k` | $125k | Compact thousands |
+| `currency0m` | $1.2m | Compact millions |
 | `pct` | 15.0% | Percentage with decimal |
 | `pct0` | 15% | Percentage integer |
 | `num0` | 1,250,000 | Number with commas |
 | `num0k` | 125k | Compact thousands |
 
-**Auto-detection:** Fields named `revenue`, `sales`, `price`, `cost` → `usd_auto`. Fields with `pct`, `percent`, `rate` → `pct`.
+**Auto-detection:** Fields named `revenue`, `sales`, `price`, `cost` → `currency_auto`. Fields with `pct`, `percent`, `rate` → `pct`.
 
 ---
 
@@ -782,7 +782,7 @@ continuous: true
 ## Section
 
 ```big_value size=[4,2]
-{"value": 125000, "label": "Revenue", "format": "usd0k"}
+{"value": 125000, "label": "Revenue", "format": "currency0k"}
 ```
 ```bar size=[12,6] file=data/sales.json
 ```

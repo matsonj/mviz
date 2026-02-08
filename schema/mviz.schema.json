@@ -94,11 +94,11 @@
     "FormatOption": {
       "enum": [
         "auto",
-        "usd_auto",
-        "usd",
-        "usd0k",
-        "usd0m",
-        "usd0b",
+        "currency_auto",
+        "currency",
+        "currency0k",
+        "currency0m",
+        "currency0b",
         "num0",
         "num1",
         "num0k",
@@ -108,6 +108,10 @@
         "pct0",
         "pct1"
       ]
+    },
+    "CurrencyCode": {
+      "type": "string",
+      "description": "ISO 4217 currency code (e.g., USD, GBP, EUR)"
     },
     "YField": {
       "oneOf": [
@@ -201,6 +205,9 @@
         "format": {
           "$ref": "#/$defs/FormatOption"
         },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
+        },
         "yMin": {
           "type": "number"
         },
@@ -257,6 +264,9 @@
         },
         "format": {
           "$ref": "#/$defs/FormatOption"
+        },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
         },
         "yMin": {
           "type": "number"
@@ -324,6 +334,9 @@
         },
         "format": {
           "$ref": "#/$defs/FormatOption"
+        },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
         },
         "yMin": {
           "type": "number"
@@ -413,6 +426,9 @@
         },
         "yFormat": {
           "$ref": "#/$defs/FormatOption"
+        },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
         }
       },
       "additionalProperties": false
@@ -460,6 +476,9 @@
         },
         "yFormat": {
           "$ref": "#/$defs/FormatOption"
+        },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
         }
       },
       "additionalProperties": false
@@ -615,6 +634,9 @@
         "format": {
           "$ref": "#/$defs/FormatOption"
         },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
+        },
         "theme": {
           "$ref": "#/$defs/Theme"
         }
@@ -755,6 +777,9 @@
         "format": {
           "$ref": "#/$defs/FormatOption"
         },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
+        },
         "theme": {
           "$ref": "#/$defs/Theme"
         }
@@ -819,6 +844,9 @@
         },
         "format": {
           "$ref": "#/$defs/FormatOption"
+        },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
         },
         "theme": {
           "$ref": "#/$defs/Theme"
@@ -917,6 +945,9 @@
         "format": {
           "$ref": "#/$defs/FormatOption"
         },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
+        },
         "theme": {
           "$ref": "#/$defs/Theme"
         }
@@ -984,6 +1015,9 @@
         "secondaryFormat": {
           "$ref": "#/$defs/FormatOption"
         },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
+        },
         "yMin": {
           "type": "number"
         },
@@ -1041,6 +1075,9 @@
         },
         "format": {
           "$ref": "#/$defs/FormatOption"
+        },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
         },
         "theme": {
           "$ref": "#/$defs/Theme"
@@ -1120,6 +1157,9 @@
         "format": {
           "$ref": "#/$defs/FormatOption"
         },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
+        },
         "comparison": {
           "type": "object",
           "properties": {
@@ -1168,6 +1208,9 @@
         "format": {
           "$ref": "#/$defs/FormatOption"
         },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
+        },
         "positiveIsGood": {
           "type": "boolean",
           "default": true
@@ -1195,8 +1238,11 @@
     "Alert": {
       "type": "object",
       "required": [
-        "type",
-        "message"
+        "type"
+      ],
+      "anyOf": [
+        { "required": ["message"] },
+        { "required": ["content"] }
       ],
       "properties": {
         "$schema": {
@@ -1209,6 +1255,10 @@
         "message": {
           "type": "string"
         },
+        "content": {
+          "type": "string",
+          "description": "Alias for message (deprecated, use message)"
+        },
         "alertType": {
           "enum": [
             "info",
@@ -1220,6 +1270,9 @@
         },
         "theme": {
           "$ref": "#/$defs/Theme"
+        },
+        "title": {
+          "type": "string"
         }
       },
       "additionalProperties": false
@@ -1414,6 +1467,9 @@
         },
         "compact": {
           "type": "boolean"
+        },
+        "currency": {
+          "$ref": "#/$defs/CurrencyCode"
         },
         "theme": {
           "$ref": "#/$defs/Theme"

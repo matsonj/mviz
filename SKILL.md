@@ -3,7 +3,7 @@ name: mviz
 description: A chart & report builder designed for use by AI.
 ---
 
-mviz v1.5.4
+mviz v1.6.0
 
 # mviz
 
@@ -32,19 +32,19 @@ Converts minimal JSON specifications into standalone HTML visualizations using E
 ### Single Chart (JSON)
 
 ```bash
-echo '<json_spec>' | npx -y -q mviz > chart.html
+echo '<json_spec>' | npx -y -q mviz -o chart.html
 ```
 
 ### Dashboard from Markdown
 
 ```bash
-npx -y -q mviz dashboard.md > dashboard.html
+npx -y -q mviz dashboard.md -o dashboard.html
 ```
 
 ### Dashboard from Folder
 
 ```bash
-npx -y -q mviz my-dashboard/ > dashboard.html
+npx -y -q mviz my-dashboard/ -o dashboard.html
 ```
 
 ## 16-Column Grid System
@@ -53,7 +53,7 @@ Components are sized using `size=[cols,rows]` syntax:
 
 ````markdown
 ```big_value size=[4,2]
-{"value": 1250000, "label": "Revenue", "format": "usd0m"}
+{"value": 1250000, "label": "Revenue", "format": "currency0m"}
 ```
 ```bar size=[8,6]
 {"title": "Sales", "x": "month", "y": "sales", "file": "data/sales.json"}
@@ -148,7 +148,7 @@ This renders Chart A and Chart B on the same row. Adding a blank line between th
 
 ````markdown
 ```big_value size=[3,2]
-{"value": 1250000, "label": "Revenue", "format": "usd0m"}
+{"value": 1250000, "label": "Revenue", "format": "currency0m"}
 ```
 ```big_value size=[3,2]
 {"value": 8450, "label": "Orders", "format": "num0k"}
@@ -193,7 +193,7 @@ Tables support column-level and cell-level formatting:
   "columns": [
     {"id": "product", "title": "Product", "bold": true},
     {"id": "category", "title": "Category", "italic": true},
-    {"id": "sales", "title": "Sales", "fmt": "usd"},
+    {"id": "sales", "title": "Sales", "fmt": "currency"},
     {"id": "margin", "title": "Margin", "type": "heatmap", "fmt": "pct"},
     {"id": "trend", "title": "Trend", "type": "sparkline", "sparkType": "line"}
   ],
@@ -229,9 +229,9 @@ Notes also support an optional `label` for bold prefix text:
 
 **big_value** - Hero metrics with large display:
 ```json
-{"type": "big_value", "value": 1250000, "label": "Revenue", "format": "usd0m"}
+{"type": "big_value", "value": 1250000, "label": "Revenue", "format": "currency0m"}
 ```
-- Optional `comparison` object: `{"value": 10300, "format": "usd", "label": "vs last month"}` shows change with arrow
+- Optional `comparison` object: `{"value": 10300, "format": "currency", "label": "vs last month"}` shows change with arrow
 
 **dumbbell** - Before/after comparisons with directional coloring:
 ```json
@@ -299,7 +299,7 @@ Notes also support an optional `label` for bold prefix text:
   "data": [[0, 0, 85], [1, 0, 90], [2, 0, 72]]
 }
 ```
-- `format` option applies to cell labels (e.g., `num0k`, `usd0k`, `pct`)
+- `format` option applies to cell labels (e.g., `num0k`, `currency0k`, `pct`)
 
 **funnel** - Conversion or elimination flows:
 ```json
@@ -315,7 +315,7 @@ Notes also support an optional `label` for bold prefix text:
   ]
 }
 ```
-- `format` option applies to labels/tooltips (e.g., `usd_auto`, `pct`, `num0`)
+- `format` option applies to labels/tooltips (e.g., `currency_auto`, `pct`, `num0`)
 
 **waterfall** - Cumulative change visualization:
 ```json
@@ -394,11 +394,11 @@ Notes also support an optional `label` for bold prefix text:
 | Format | Example | Use For |
 |--------|---------|---------|
 | `auto` | 1.000m, 10.00k | **Smart auto-format (recommended)** |
-| `usd_auto` | $1.000m, $10.00k | Smart auto-format with $ prefix |
-| `usd0m` | $1.2m | Millions |
-| `usd0b` | $1.2b | Billions |
-| `usd0k` | $125k | Thousands |
-| `usd` | $1,250,000 | Detailed amounts |
+| `currency_auto` | $1.000m, $10.00k | Smart auto-format with $ prefix |
+| `currency0m` | $1.2m | Millions |
+| `currency0b` | $1.2b | Billions |
+| `currency0k` | $125k | Thousands |
+| `currency` | $1,250,000 | Detailed amounts |
 | `num0m` | 1.2m | Millions |
 | `num0b` | 1.2b | Billions |
 | `num0k` | 125k | Thousands |
@@ -409,7 +409,7 @@ Notes also support an optional `label` for bold prefix text:
 
 **Important:** Percentage formats expect decimal values (0.25 = 25%), not whole numbers.
 
-**Smart formatting (`auto`/`usd_auto`) is recommended.** The `format` option applies to both axis labels and data labels on bar charts. It automatically picks the right suffix (k, m, b) based on magnitude and always shows 4 significant digits. Negative values are wrapped in parentheses: `(1.000m)`.
+**Smart formatting (`auto`/`currency_auto`) is recommended.** The `format` option applies to both axis labels and data labels on bar charts. It automatically picks the right suffix (k, m, b) based on magnitude and always shows 4 significant digits. Negative values are wrapped in parentheses: `(1.000m)`.
 
 When no format is specified, smart formatting is used by default.
 
@@ -419,7 +419,7 @@ Chart axes automatically detect the appropriate format based on field names:
 
 | Field Pattern | Auto Format | Example |
 |---------------|-------------|---------|
-| revenue, sales, price, cost, profit, amount | `usd_auto` | $1.250m |
+| revenue, sales, price, cost, profit, amount | `currency_auto` | $1.250m |
 | pct, percent, rate, ratio | `pct` | 15.0% |
 | All other numeric fields | `auto` | 1.250m |
 
@@ -617,7 +617,7 @@ title: My Dashboard
 ## Section Name
 
 ```big_value size=[4,2]
-{"value": 125000, "label": "Revenue", "format": "usd0k"}
+{"value": 125000, "label": "Revenue", "format": "currency0k"}
 ```
 ```bar size=[12,6] file=data/sales.json
 ```
@@ -666,7 +666,7 @@ The theme toggle affects all charts globally - individual chart `theme` settings
 Load custom brand colors and fonts from a YAML file:
 
 ```bash
-npx -y -q mviz --theme my_theme.yaml dashboard.md > dashboard.html
+npx -y -q mviz --theme my_theme.yaml dashboard.md -o dashboard.html
 ```
 
 Example theme file:
