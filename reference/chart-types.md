@@ -170,12 +170,29 @@ Scatter plot for correlation analysis. Supports multiple series via `series` fie
 }
 ```
 
+**With persistent labels** (`showLabels: true` + `label` field):
+```json
+{
+  "type": "scatter",
+  "title": "City Populations",
+  "x": "area",
+  "y": "population",
+  "label": "city",
+  "showLabels": true,
+  "data": [
+    {"city": "New York", "area": 302, "population": 8300000},
+    {"city": "LA", "area": 469, "population": 3900000}
+  ]
+}
+```
+
 ---
 
 ### bubble
 
-Bubble chart (scatter with size dimension).
+Bubble chart (scatter with size dimension). Supports `series` for color grouping and `showLabels` for persistent labels.
 
+**Simple:**
 ```json
 {
   "type": "bubble",
@@ -186,6 +203,23 @@ Bubble chart (scatter with size dimension).
   "data": [
     {"market_size": 100, "growth_rate": 0.15, "revenue": 5000000},
     {"market_size": 80, "growth_rate": 0.25, "revenue": 3000000}
+  ]
+}
+```
+
+**Multi-series** (grouped by field, with label):
+```json
+{
+  "type": "bubble",
+  "title": "LLM Cost vs Accuracy",
+  "x": "cost",
+  "y": "accuracy",
+  "size": "samples",
+  "series": "provider",
+  "label": "model",
+  "data": [
+    {"model": "GPT-4", "cost": 3.0, "accuracy": 95, "samples": 500, "provider": "OpenAI"},
+    {"model": "Claude 3", "cost": 2.5, "accuracy": 93, "samples": 600, "provider": "Anthropic"}
   ]
 }
 ```
@@ -722,7 +756,7 @@ Data table with formatting. Supports inline sparklines and heatmap columns.
 
 **Column types:**
 - `"type": "sparkline"` with `sparkType`: `line`, `bar`, `area`, `pct_bar`, `dumbbell`
-- `"type": "heatmap"` - color gradient from low to high values
+- `"type": "heatmap"` - color gradient from low to high values. Set `higherIsBetter: false` to invert the gradient (intense color = low values, useful for error rates, latency, etc.)
 
 **Dumbbell sparklines:** Data as `[start, end]` array. Set `higherIsBetter: false` for metrics where lower is better.
 

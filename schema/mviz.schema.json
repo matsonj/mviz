@@ -415,6 +415,10 @@
           "type": "string",
           "description": "Field name for point labels shown in tooltips"
         },
+        "showLabels": {
+          "type": "boolean",
+          "description": "Show persistent labels next to points (requires label field)"
+        },
         "title": {
           "type": "string"
         },
@@ -461,9 +465,17 @@
         "size": {
           "type": "string"
         },
+        "series": {
+          "type": "string",
+          "description": "Field name to group data points by (creates multiple colored series)"
+        },
         "label": {
           "type": "string",
           "description": "Field name for point labels shown in tooltips"
+        },
+        "showLabels": {
+          "type": "boolean",
+          "description": "Show persistent labels next to points (requires label field)"
         },
         "title": {
           "type": "string"

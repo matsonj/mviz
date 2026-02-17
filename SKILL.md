@@ -3,7 +3,7 @@ name: mviz
 description: A chart & report builder designed for use by AI.
 ---
 
-mviz v1.6.0
+mviz v1.6.1
 
 # mviz
 
@@ -333,7 +333,7 @@ Notes also support an optional `label` for bold prefix text:
 }
 ```
 
-**bubble** - Scatter plot with size dimension:
+**bubble** - Scatter with size dimension. Supports `series` for color grouping and `showLabels` for persistent labels:
 ```json
 {
   "type": "bubble",
@@ -341,9 +341,11 @@ Notes also support an optional `label` for bold prefix text:
   "x": "growth",
   "y": "profit",
   "size": "revenue",
+  "series": "region",
+  "label": "company",
   "data": [
-    {"growth": 5, "profit": 20, "revenue": 100},
-    {"growth": 10, "profit": 15, "revenue": 200}
+    {"growth": 5, "profit": 20, "revenue": 100, "region": "US", "company": "Acme"},
+    {"growth": 10, "profit": 15, "revenue": 200, "region": "EU", "company": "Beta"}
   ]
 }
 ```
