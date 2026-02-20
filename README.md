@@ -34,7 +34,7 @@ If you do not have a database available, you can also load CSV files directly, a
 
 **Claude Web or Desktop:** Download [`mviz.skill`](https://gist.github.com/matsonj/1c13b656bca20b1d2cc6260309d8eb40) and add it to your project knowledge.
 
-**Claude Code:** Run `npx add-skill matsonj/mviz` or clone this repo and work from the directory.
+**Claude Code:** Run `npx skills add matsonj/mviz` or clone this repo and work from the directory.
 
 ### 3. Effective Use Tips
 
