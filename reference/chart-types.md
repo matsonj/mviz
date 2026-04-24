@@ -766,6 +766,27 @@ Data table with formatting. Supports inline sparklines and heatmap columns.
 
 **Cell overrides:** Use `{"value": "text", "bold": true}` to override column styling per cell.
 
+**Sort & filter:**
+
+- `sortable` (default `true`) — click a column header to sort; cycles asc → desc → off. Numeric columns sort by raw value so formatted text (`$1.250m`, `15.0%`) doesn't break ordering.
+- `filter` (default `false`) — when `true`, render a "Filter by any value…" search input above the table. Rows filter live on case-insensitive contains match across all cells.
+
+```json
+{
+  "type": "table",
+  "sortable": true,
+  "filter": true,
+  "columns": [
+    {"id": "product"},
+    {"id": "category"},
+    {"id": "sales", "fmt": "currency"}
+  ],
+  "data": [...]
+}
+```
+
+Set `sortable: false` to render a static table (useful for small reference tables or print-only reports).
+
 ---
 
 ## Format Options
@@ -781,6 +802,11 @@ Data table with formatting. Supports inline sparklines and heatmap columns.
 | `pct0` | 15% | Percentage integer |
 | `num0` | 1,250,000 | Number with commas |
 | `num0k` | 125k | Compact thousands |
+
+**Percentages:**
+
+- **Scalars** (`big_value`, `delta`) always multiply the value by 100. Pass `0.155` for `15.5%`. Pass `1.2` for `120%`. The linter warns when `|value| > 1` with a `pct*` format in case you meant `value/100`.
+- **Charts and tables** are series-aware: they check the column/series and skip the multiply when any value exceeds 1. `[15, 22, 18]` → `15%`, `22%`, `18%`. `[0.15, 0.22, 0.18]` → `15%`, `22%`, `18%`. `[0.8, 1.2]` → `80%`, `120%` (max > 1 means "already percent", so the fractional interpretation doesn't apply here — split values > 1 into their own scalar if that's not what you want).
 
 **Auto-detection:** Fields named `revenue`, `sales`, `price`, `cost` → `currency_auto`. Fields with `pct`, `percent`, `rate` → `pct`.
 

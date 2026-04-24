@@ -3,7 +3,7 @@ name: mviz
 description: A chart & report builder designed for use by AI.
 ---
 
-mviz v1.6.4
+mviz v1.6.5
 
 # mviz
 
@@ -95,19 +95,17 @@ This renders Chart A and Chart B on the same row. Adding a blank line between th
 
 | Syntax | Effect |
 |--------|--------|
-| `# H1` | Major section title |
+| `# H1` | Page title |
 | `## H2` | Section title |
 | `### H3` | Light inline header (subtle, smaller text) |
 | `---` | Visual divider line |
 | `===` | Page break for printing |
-| `===` | Explicit page break: forces new page in PDF |
 | `empty_space` | Invisible grid cell spacer (default 4 cols × 2 rows) |
 
 **Heading Guidelines:**
-- Use `# H1` for major document sections that warrant their own page when printed
-- Use `## H2` for content sections within a page (most common)
-- Use `### H3` for lightweight subheadings that don't interrupt flow
-- In `continuous: true` mode, H1 page breaks are suppressed
+- Set the page title with either the frontmatter `title:` *or* a leading `# H1`, not both.
+- Use `## H2` for section titles within a page (most common).
+- Use `### H3` for lightweight subheadings that don't interrupt flow.
 
 **Section vs Page Breaks:**
 - Use `---` to separate logical sections visually. Content flows naturally to the next page when needed.
@@ -208,6 +206,15 @@ Tables support column-level and cell-level formatting:
 **Heatmap:** Applies color gradient from low to high values. Text auto-switches to white on dark backgrounds.
 
 **Sparkline types:** `line`, `bar`, `area`, `pct_bar` (progress bar), `dumbbell` (before/after comparison)
+
+**Sort & filter:**
+
+| Field | Values | Default | Effect |
+|-------|--------|---------|--------|
+| `sortable` | `true` / `false` | `true` | Click a column header to sort. Cycles asc → desc → off. Numeric columns sort by raw value. |
+| `filter` | `true` / `false` | `false` | When true, render a "Filter by any value…" search input above the table. Rows filter live on case-insensitive contains match across all cells. |
+
+Example: `{"type": "table", "filter": true, "columns": [...], "data": [...]}`
 
 ### Note Types
 
@@ -409,7 +416,7 @@ Notes also support an optional `label` for bold prefix text:
 | `pct0` | 15% | Percentage integer |
 | `pct1` | 15.0% | Percentage with 1 decimal |
 
-**Important:** Percentage formats expect decimal values (0.25 = 25%), not whole numbers.
+**Percentage formats:** `pct`, `pct0`, `pct1` always multiply by 100 for scalar components (`big_value`, `delta`) — pass `0.15` for `15%`. Charts and tables are **series-aware**: they inspect the column/series and skip the multiply when any value exceeds 1, so `[15, 22, 18]` renders as `15.0%`, `22.0%`, `18.0%` (not `1500%+`) while `[0.15, 0.22, 0.18]` still renders as `15.0%`, `22.0%`, `18.0%`. Pass `[0.8, 1.2]` for a growth-rate series and it'll render as `80%`, `120%`. If `big_value` / `delta` get a pct value > 1, the linter warns "did you mean value/100?".
 
 **Smart formatting (`auto`/`currency_auto`) is recommended.** The `format` option applies to both axis labels and data labels on bar charts. It automatically picks the right suffix (k, m, b) based on magnitude and always shows 4 significant digits. Negative values are wrapped in parentheses: `(1.000m)`.
 

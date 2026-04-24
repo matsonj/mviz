@@ -1480,6 +1480,16 @@
         "compact": {
           "type": "boolean"
         },
+        "sortable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable click-to-sort on column headers. Cycles asc → desc → none. Numeric columns sort by raw value."
+        },
+        "filter": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, render a global search input above the table that filters rows by case-insensitive contains match on any cell."
+        },
         "currency": {
           "$ref": "#/$defs/CurrencyCode"
         },
