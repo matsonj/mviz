@@ -132,7 +132,7 @@ This renders Chart A and Chart B on the same row. Adding a blank line between th
 ### Dense, Information-Rich Layouts
 
 1. Pack 4-5 KPIs per row using `size=[3,2]` or `size=[4,2]`
-2. Use compact number formats (`usd0m` not `usd`)
+2. Use compact number formats (`currency0m` not `currency`)
 3. Place charts side-by-side with `size=[8,6]`
 4. Add textarea descriptions to each section
 
@@ -151,7 +151,7 @@ This renders Chart A and Chart B on the same row. Adding a blank line between th
 ```
 
 ```table size=[16,6]
-{"columns": [{"id": "market", "title": "Market"}, {"id": "revenue", "title": "Q3 Revenue", "fmt": "usd_auto", "bold": true}, {"id": "share", "title": "Share", "fmt": "pct"}, {"id": "trend", "title": "Monthly", "type": "sparkline"}], "data": [...]}
+{"columns": [{"id": "market", "title": "Market"}, {"id": "revenue", "title": "Q3 Revenue", "fmt": "currency_auto", "bold": true}, {"id": "share", "title": "Share", "fmt": "pct"}, {"id": "trend", "title": "Monthly", "type": "sparkline"}], "data": [...]}
 ```
 
 ```textarea size=[16,2]

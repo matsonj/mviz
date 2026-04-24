@@ -213,6 +213,13 @@
         },
         "yMax": {
           "type": "number"
+        },
+        "xAxisType": {
+          "enum": [
+            "category",
+            "time",
+            "value"
+          ]
         }
       },
       "additionalProperties": false
@@ -343,6 +350,13 @@
         },
         "yMax": {
           "type": "number"
+        },
+        "xAxisType": {
+          "enum": [
+            "category",
+            "time",
+            "value"
+          ]
         }
       },
       "additionalProperties": false
@@ -939,7 +953,15 @@
           ]
         },
         "value": {
-          "type": "number"
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Numeric percentage for pct/pct_bar sparkType, or the data field name (string) whose values are plotted for line/bar/area/dumbbell sparkType."
         },
         "sparkType": {
           "enum": [
@@ -962,6 +984,11 @@
         },
         "theme": {
           "$ref": "#/$defs/Theme"
+        },
+        "showValue": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the formatted value next to the bar (pct/pct_bar sparkType only)"
         }
       },
       "additionalProperties": false
@@ -1093,6 +1120,12 @@
         },
         "theme": {
           "$ref": "#/$defs/Theme"
+        },
+        "xMin": {
+          "type": "number"
+        },
+        "xMax": {
+          "type": "number"
         }
       },
       "additionalProperties": false

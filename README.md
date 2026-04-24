@@ -156,7 +156,7 @@ title: My Report
 ## Section Name
 
 ```big_value size=[4,2]
-{"value": 125000, "label": "Revenue", "format": "usd0m"}
+{"value": 125000, "label": "Revenue", "format": "currency0m"}
 ```
 ```delta size=[4,2]
 {"value": 0.15, "label": "vs Last Month", "format": "pct0"}
@@ -200,7 +200,7 @@ Tables support inline sparkline columns for trend visualization:
   "type": "table",
   "columns": [
     {"id": "product", "title": "Product"},
-    {"id": "sales", "title": "Sales", "fmt": "usd"},
+    {"id": "sales", "title": "Sales", "fmt": "currency"},
     {"id": "trend", "title": "Trend", "type": "sparkline", "sparkType": "line"},
     {"id": "progress", "title": "Goal", "type": "sparkline", "sparkType": "pct_bar", "width": 100}
   ],
@@ -217,10 +217,10 @@ Sparkline types: `line`, `bar`, `area`, `pct_bar` (progress bar), `dumbbell` (be
 | Format | Output | Description |
 |--------|--------|-------------|
 | `auto` | 1.000m, 10.00k | **Smart auto-format (default)** |
-| `usd_auto` | $1.000m, $10.00k | Smart auto-format with $ |
-| `usd0m` | $1.2m | Millions |
-| `usd0k` | $125k | Compact thousands |
-| `usd` | $1,250,000 | Full dollars |
+| `currency_auto` | $1.000m, $10.00k | Smart auto-format with currency symbol |
+| `currency0m` | $1.2m | Millions |
+| `currency0k` | $125k | Compact thousands |
+| `currency` | $1,250,000 | Full currency |
 | `pct0` | 15% | Percentage integer |
 | `pct` | 15.0% | Percentage with decimal |
 | `pct1` | 15.0% | Percentage with 1 decimal |
@@ -234,7 +234,7 @@ Chart axes automatically detect the appropriate format based on field names:
 
 | Field Pattern | Auto Format | Example |
 |---------------|-------------|---------|
-| revenue, sales, price, cost, profit | `usd_auto` | $1.250m |
+| revenue, sales, price, cost, profit | `currency_auto` | $1.250m |
 | pct, percent, rate, ratio | `pct` or `pct0` | 15.0% |
 | All other fields | `auto` | 1.250m |
 
@@ -375,7 +375,7 @@ The skill is automatically available when working in this project directory.
 
 ## Dependencies
 
-- Node.js 20+
+- Node.js 24.12+
 
 ## Design Philosophy
 
