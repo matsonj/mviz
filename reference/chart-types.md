@@ -802,6 +802,8 @@ Set `sortable: false` to render a static table (useful for small reference table
 | `pct0` | 15% | Percentage integer |
 | `num0` | 1,250,000 | Number with commas |
 | `num0k` | 125k | Compact thousands |
+| `date` | 2026-02-24 | ISO date — strings pass through, numbers render as `YYYY-MM-DD`. Tables sort by epoch ms. |
+| `duration` | 1m7s | Duration — numeric seconds render as `1m7s` / `25m39s`, strings pass through. Tables sort by total seconds. |
 
 **Percentages:**
 

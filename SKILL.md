@@ -3,7 +3,7 @@ name: mviz
 description: A chart & report builder designed for use by AI.
 ---
 
-mviz v1.6.6
+mviz v1.6.7
 
 # mviz
 
@@ -415,6 +415,8 @@ Notes also support an optional `label` for bold prefix text:
 | `pct` | 15.0% | Percentage with decimal |
 | `pct0` | 15% | Percentage integer |
 | `pct1` | 15.0% | Percentage with 1 decimal |
+| `date` | 2026-02-24 | Date column — string values pass through; numeric epoch ms render as `YYYY-MM-DD`. Tables sort by epoch ms. |
+| `duration` | 1m7s | Duration column — numeric seconds render as `1m7s` / `25m39s`; strings pass through. Tables sort by total seconds. |
 
 **Percentage formats:** `pct`, `pct0`, `pct1` always multiply by 100 for scalar components (`big_value`, `delta`) — pass `0.15` for `15%`. Charts and tables are **series-aware**: they inspect the column/series and skip the multiply when any value exceeds 1, so `[15, 22, 18]` renders as `15.0%`, `22.0%`, `18.0%` (not `1500%+`) while `[0.15, 0.22, 0.18]` still renders as `15.0%`, `22.0%`, `18.0%`. Pass `[0.8, 1.2]` for a growth-rate series and it'll render as `80%`, `120%`. If `big_value` / `delta` get a pct value > 1, the linter warns "did you mean value/100?".
 

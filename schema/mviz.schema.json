@@ -109,6 +109,27 @@
         "pct1"
       ]
     },
+    "TableColumnFormatOption": {
+      "description": "Format options for table columns. Extends FormatOption with 'date' and 'duration', which only affect table rendering and sort (not chart axes/labels).",
+      "enum": [
+        "auto",
+        "currency_auto",
+        "currency",
+        "currency0k",
+        "currency0m",
+        "currency0b",
+        "num0",
+        "num1",
+        "num0k",
+        "num0m",
+        "num0b",
+        "pct",
+        "pct0",
+        "pct1",
+        "date",
+        "duration"
+      ]
+    },
     "CurrencyCode": {
       "type": "string",
       "description": "ISO 4217 currency code (e.g., USD, GBP, EUR)"
@@ -135,6 +156,7 @@
     },
     "ColumnarData": {
       "type": "object",
+      "description": "Columnar data shape accepted as an alternative to `data` on DataArray-based chart types. The CLI normalizes this to `data` before rendering or linting.",
       "properties": {
         "columns": {
           "type": "array",
@@ -176,13 +198,15 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
         },
         "rows": {
           "type": "array",
           "items": {
             "type": "array"
-          }
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "x": {
           "type": "string"
@@ -246,13 +270,15 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
         },
         "rows": {
           "type": "array",
           "items": {
             "type": "array"
-          }
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "x": {
           "type": "string"
@@ -313,13 +339,15 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
         },
         "rows": {
           "type": "array",
           "items": {
             "type": "array"
-          }
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "x": {
           "type": "string"
@@ -377,6 +405,20 @@
         "data": {
           "$ref": "#/$defs/DataArray"
         },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
+        },
         "name": {
           "type": "string",
           "default": "name"
@@ -414,6 +456,20 @@
         },
         "data": {
           "$ref": "#/$defs/DataArray"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "x": {
           "type": "string"
@@ -469,6 +525,20 @@
         },
         "data": {
           "$ref": "#/$defs/DataArray"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "x": {
           "type": "string"
@@ -554,8 +624,7 @@
     "HistogramChart": {
       "type": "object",
       "required": [
-        "type",
-        "data"
+        "type"
       ],
       "properties": {
         "$schema": {
@@ -578,6 +647,20 @@
             }
           ]
         },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
+        },
         "value": {
           "type": "string"
         },
@@ -592,13 +675,25 @@
           "$ref": "#/$defs/Theme"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "required": [
+            "columns",
+            "rows"
+          ]
+        }
+      ]
     },
     "WaterfallChart": {
       "type": "object",
       "required": [
-        "type",
-        "data"
+        "type"
       ],
       "properties": {
         "$schema": {
@@ -636,6 +731,20 @@
             }
           }
         },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
+        },
         "name": {
           "type": "string",
           "default": "name",
@@ -667,13 +776,25 @@
           "$ref": "#/$defs/Theme"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "required": [
+            "columns",
+            "rows"
+          ]
+        }
+      ]
     },
     "XmrChart": {
       "type": "object",
       "required": [
-        "type",
-        "data"
+        "type"
       ],
       "properties": {
         "$schema": {
@@ -695,6 +816,20 @@
               "$ref": "#/$defs/DataArray"
             }
           ]
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "value": {
           "type": "string",
@@ -721,13 +856,25 @@
           "type": "number"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "required": [
+            "columns",
+            "rows"
+          ]
+        }
+      ]
     },
     "SankeyChart": {
       "type": "object",
       "required": [
-        "type",
-        "data"
+        "type"
       ],
       "properties": {
         "$schema": {
@@ -759,6 +906,20 @@
             }
           }
         },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
+        },
         "nodes": {
           "type": "array",
           "items": {
@@ -772,13 +933,25 @@
           "$ref": "#/$defs/Theme"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "required": [
+            "columns",
+            "rows"
+          ]
+        }
+      ]
     },
     "FunnelChart": {
       "type": "object",
       "required": [
-        "type",
-        "data"
+        "type"
       ],
       "properties": {
         "$schema": {
@@ -790,6 +963,20 @@
         },
         "data": {
           "$ref": "#/$defs/DataArray"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "name": {
           "type": "string"
@@ -810,13 +997,25 @@
           "$ref": "#/$defs/Theme"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "required": [
+            "columns",
+            "rows"
+          ]
+        }
+      ]
     },
     "HeatmapChart": {
       "type": "object",
       "required": [
         "type",
-        "data",
         "xCategories",
         "yCategories"
       ],
@@ -853,6 +1052,20 @@
             ]
           }
         },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
+        },
         "xCategories": {
           "type": "array",
           "items": {
@@ -878,13 +1091,25 @@
           "$ref": "#/$defs/Theme"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "required": [
+            "columns",
+            "rows"
+          ]
+        }
+      ]
     },
     "CalendarChart": {
       "type": "object",
       "required": [
         "type",
-        "data",
         "year"
       ],
       "properties": {
@@ -914,6 +1139,20 @@
             }
           }
         },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
+        },
         "year": {
           "type": "integer"
         },
@@ -924,7 +1163,20 @@
           "$ref": "#/$defs/Theme"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "required": [
+            "columns",
+            "rows"
+          ]
+        }
+      ]
     },
     "SparklineChart": {
       "type": "object",
@@ -951,6 +1203,20 @@
               "$ref": "#/$defs/DataArray"
             }
           ]
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "value": {
           "oneOf": [
@@ -1009,6 +1275,20 @@
         },
         "data": {
           "$ref": "#/$defs/DataArray"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "x": {
           "type": "string"
@@ -1070,7 +1350,6 @@
       "type": "object",
       "required": [
         "type",
-        "data",
         "category",
         "start",
         "end"
@@ -1085,6 +1364,20 @@
         },
         "data": {
           "$ref": "#/$defs/DataArray"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columnar form: column names. Use together with `rows` as an alternative to `data`."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array"
+          },
+          "description": "Columnar form: row values. Use together with `columns` as an alternative to `data`."
         },
         "category": {
           "type": "string"
@@ -1128,7 +1421,20 @@
           "type": "number"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "data"
+          ]
+        },
+        {
+          "required": [
+            "columns",
+            "rows"
+          ]
+        }
+      ]
     },
     "MermaidChart": {
       "type": "object",
@@ -1146,8 +1452,15 @@
         },
         "code": {
           "oneOf": [
-            { "type": "string" },
-            { "type": "array", "items": { "type": "string" } }
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           ],
           "description": "Mermaid diagram syntax as string or array of lines (joined with newlines)"
         },
@@ -1260,6 +1573,11 @@
           "type": "boolean",
           "default": true
         },
+        "neutralIs": {
+          "type": "number",
+          "default": 0,
+          "description": "Value treated as neutral (no change). When value === neutralIs, the indicator uses a right-arrow and muted color instead of green/red."
+        },
         "comparison": {
           "type": "object",
           "properties": {
@@ -1286,8 +1604,16 @@
         "type"
       ],
       "anyOf": [
-        { "required": ["message"] },
-        { "required": ["content"] }
+        {
+          "required": [
+            "message"
+          ]
+        },
+        {
+          "required": [
+            "content"
+          ]
+        }
       ],
       "properties": {
         "$schema": {
@@ -1448,7 +1774,7 @@
           ]
         },
         "fmt": {
-          "$ref": "#/$defs/FormatOption"
+          "$ref": "#/$defs/TableColumnFormatOption"
         },
         "bold": {
           "type": "boolean"
@@ -1516,7 +1842,7 @@
         "sortable": {
           "type": "boolean",
           "default": true,
-          "description": "Enable click-to-sort on column headers. Cycles asc → desc → none. Numeric columns sort by raw value."
+          "description": "Enable click-to-sort on column headers. Cycles asc \u2192 desc \u2192 none. Numeric columns sort by raw value."
         },
         "filter": {
           "type": "boolean",
