@@ -1,9 +1,9 @@
 ---
 name: mviz
-description: A chart & report builder designed for use by AI.
+description: A chart & report builder for AI. Use when the user asks to show, display, render, or visualize data as a chart (bar, line, pie, scatter, area, bubble, histogram, etc.), a table, KPI, big number, dashboard, report, sparkline, heatmap, sankey, funnel, calendar, waterfall, or any composed data visualization. Generates compact markdown specs that render either inline (via visualize:show_widget) or as standalone HTML files (via the mviz CLI).
 ---
 
-mviz v1.6.7
+mviz v1.7.0
 
 # mviz
 
@@ -17,9 +17,40 @@ For faster repeated use, install globally: `npm install -g mviz`
 
 ## What This Skill Does
 
-Converts minimal JSON specifications into standalone HTML visualizations using ECharts. Instead of writing 50-100 lines of chart code, write a compact spec that gets expanded into a full HTML artifact with professional styling.
+mviz is two things:
 
-## Visual Style (mdsinabox theme)
+1. **A spec language** — markdown with fenced code blocks describing components (charts, KPIs, tables, notes, etc.). One markdown file (or a single JSON spec) describes a whole visualization.
+2. **A set of renderers** that turn that spec into HTML for different display contexts. Today there are two:
+   - **`visualize:show_widget`** (inline) — when you're in claude.ai with the visualization tool available, render the mviz spec as a `widget_code` HTML fragment using claude.ai's design system (Chart.js, `var(--color-*)` tokens). The widget appears inline in the conversation.
+   - **mviz CLI** (standalone) — `mviz dashboard.md -o report.html` produces a complete HTML document with mviz's own design system (mdsinabox theme, ECharts). Suitable for downloads, iframe tiles, print/PDF.
+
+The mviz markdown spec is canonical; the renderer is chosen based on where the visualization will appear. Same spec, two renderings. A third-party could build a different renderer (Chart.js-based CLI, Slack-themed renderer, etc.) without changing the spec.
+
+## Picking a renderer
+
+**Always compose the mviz markdown spec first**, even when rendering inline. The spec is the canonical artifact — emit it in a fenced code block in your response so the user can copy / reuse / pipe-to-CLI later. Then render it with whichever renderer fits the request.
+
+Before rendering, decide which renderer fits — and **state your inference** so the user can correct you. Some signals:
+
+**Inline (`visualize:show_widget`):**
+- "show me X" / "what was X" / "how did X change" / "render"
+- A small visualization (typically 1–4 components) that flows with the surrounding prose
+- The user is exploring data, not preparing something to share
+- `visualize:show_widget` is available in this conversation
+
+**Standalone (mviz CLI):**
+- "make a report" / "send me the file" / "export to PDF" / "save"
+- Multi-section composed view (5+ components, dividers, page breaks, full-width tables)
+- The user wants something to save, share, print, or embed in an external host (iframe tile, dashboard cell)
+- `visualize:show_widget` is unavailable (no inline rendering surface)
+
+Default to inline when ambiguous. State the inference explicitly:
+
+> *"I'll render this inline since you asked to see it in chat. If you'd rather a downloadable file, I can run the mviz CLI on the same spec — just say the word."*
+
+If the user later asks for the file version after an inline render, the spec is already in the conversation — pipe it through `mviz ... -o out.html` without re-composing.
+
+## Visual Style (mdsinabox theme — for the CLI renderer)
 
 - **Font**: Helvetica Neue, Arial (clean sans-serif)
 - **Signature**: Orange accent line at top of dashboards
@@ -27,7 +58,9 @@ Converts minimal JSON specifications into standalone HTML visualizations using E
 - **Background**: Paper (`#f8f8f8` light) / Dark (`#231f20` dark)
 - **Principles**: High data-ink ratio, no chartjunk, minimal gridlines, data speaks for itself
 
-## How to Use
+## Renderer: mviz CLI (standalone HTML)
+
+The CLI renderer produces a complete HTML document styled in the mdsinabox theme above. Output is suitable for direct browser viewing, PDF export, iframe embedding, or sharing as a file.
 
 ### Single Chart (JSON)
 
@@ -46,6 +79,16 @@ npx -y -q mviz dashboard.md -o dashboard.html
 ```bash
 npx -y -q mviz my-dashboard/ -o dashboard.html
 ```
+
+### Iframe-embedded output (`--embed`)
+
+When the rendered HTML will live inside another product's iframe (mdw-turbo Prism tiles, dashboard cells, etc.), pass `--embed` to strip page chrome (red accent bar, title row, theme toggle) and apply a battery of post-processes that lean the body: CSS pruning, transparent backgrounds so the host's card chrome shows through, ECharts script dropped when no charts are present, marked dropped when no `marked.parse(...)` caller, JS minify, etc.
+
+```bash
+npx -y -q mviz dashboard.md --embed -o tile.html
+```
+
+Embed mode emits a complete HTML document (DOCTYPE + html + head + body intact). It's not the right tool for `visualize:show_widget` — for that, use the other renderer (see below).
 
 ## 16-Column Grid System
 
@@ -667,10 +710,300 @@ print: true
 | `orientation` | `portrait` (default) or `landscape` for print layout |
 | `print` | When `true`, requires explicit `size=[cols,rows]` on all components |
 | `continuous` | When `true`, removes section breaks between `#` headers for flowing layout |
+| `embed` | When `true`, strips page chrome (red accent bar, title row, theme toggle) so the output can be tucked inside another host's frame (iframe tile, dashboard cell). Also available as the `--embed` CLI flag. |
 
 **Page capacity:** Portrait fits 30 row units, landscape fits 22 row units (Letter paper, 0.5" margins).
 
 The theme toggle affects all charts globally - individual chart `theme` settings are ignored in favor of the global toggle.
+
+## Renderer: `visualize:show_widget` (inline)
+
+The show_widget renderer lives inside Claude. Claude reads the mviz spec, translates it to a `widget_code` HTML fragment using claude.ai's design system (Chart.js + `var(--color-*)` tokens), and passes it to `visualize:show_widget`. The widget appears inline in the conversation.
+
+### Workflow
+
+1. **Compose the mviz markdown spec** and emit it visibly in your response, in a fenced code block. The spec is the canonical artifact — even when the user only wants an inline render, write the spec down so it's available for later (copy / reuse / pipe-to-CLI). Then render below it.
+
+   ```markdown
+   ```mviz
+   ---
+   title: Q3 sales
+   ---
+   ```big_value
+   {"value": 1250000, "label": "Q3 Revenue", "format": "currency_auto"}
+   ```
+   ...
+   ```
+
+2. **State your renderer inference**, one short sentence. Example: *"Rendering inline since you asked to see it in chat — say the word if you want the file too."*
+
+3. **Translate the spec to `widget_code`** following the mapping tables below. Use claude.ai's design tokens (`var(--color-*)`), Chart.js for charts, metric cards for KPIs.
+
+4. **Call `visualize:show_widget`** with the `widget_code`.
+
+5. **Write the surrounding explanation as normal response text**, outside the tool call. The widget is the visual; your prose carries the meaning.
+
+### When this renderer is the right pick
+
+Trigger inline rendering when **all** of these hold:
+- The user is in claude.ai web/desktop (not Claude Code, not the API).
+- `visualize:show_widget` is in your available tools.
+- The visualization is composed of mviz component types that have chat-native equivalents (see mapping below).
+- The visualization is small enough to emit naturally as `widget_code` — model emit time dominates latency, so 6–8 components is comfortable, 15+ starts to feel slow.
+
+If any of those fails — mviz-only chart types like sankey/heatmap, very large dashboards, no `show_widget` — render through the mviz CLI instead and offer the file as a follow-up.
+
+### What the show_widget renderer is NOT
+
+- **Not the mviz CLI.** Don't invoke `npx mviz` to produce HTML for `show_widget`. The CLI's mdsinabox-styled output doesn't match the chat host, and the subprocess + larger emit costs latency. The CLI is a *peer renderer* used for standalone files.
+- **Not a paste-mviz-output-into-widget_code path.** mviz CLI emits a complete document with its own design system; that wouldn't render correctly inside the widget sandbox even if `show_widget` accepted documents (it doesn't — it requires fragments).
+
+### The translation: mviz spec → claude.ai-native HTML
+
+mviz markdown describes structure. Read the spec, then write a `widget_code` HTML fragment using claude.ai's design system.
+
+**Component type mapping**
+
+| mviz type | claude.ai-native rendering |
+|---|---|
+| `big_value` | Metric card: surface card with `--color-text-secondary` 13px label above, 24px / weight 500 number below |
+| `delta` | Metric card variant with colored sign (`--color-success` / `--color-danger`) + arrow glyph |
+| `bar` | Chart.js `type: 'bar'` |
+| `line` | Chart.js `type: 'line'` |
+| `area` | Chart.js `type: 'line'` with `fill: true` |
+| `pie` | Chart.js `type: 'pie'`. If the mviz spec sets `donut: true`, render as Chart.js `type: 'doughnut'` instead (mviz exposes donut as a *flag* on the pie type, not a separate component). |
+| `scatter` | Chart.js `type: 'scatter'` |
+| `bubble` | Chart.js `type: 'bubble'` |
+| `histogram` | Chart.js `type: 'bar'` over pre-bucketed data |
+| `sparkline` | Inline `<svg>` (3–5 line-width strokes) — too small to justify Chart.js |
+| `table` | HTML `<table>` with `border-collapse: collapse`, `0.5px solid var(--color-border-tertiary)`, header row in `--color-background-secondary` |
+| `note`, `alert` | Bordered callout: `border-left: 3px solid var(--color-{info,warning,success,danger})`, padding 8px 12px, label + body text |
+| `text`, `textarea` | Render the markdown content as prose **in your response text outside the tool call** — not inside the widget. The `visualize:read_me` design guide is explicit: text goes in the response, visuals go in the tool. |
+| `empty_space` | An empty grid cell — produce `<div></div>` with the right `grid-column: span N` |
+| `boxplot`, `waterfall`, `xmr`, `sankey`, `funnel`, `heatmap`, `calendar`, `combo`, `dumbbell`, `mermaid` | No clean Chart.js equivalent. If the visualization centers on one of these, fall back to a standalone `mviz` export and don't render inline. |
+
+**Layout mapping**
+
+mviz uses a 16-col grid with explicit `size=[cols, rows]` directives. Inside a 680px-wide `show_widget` container, that translates to:
+
+```css
+.mviz-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 8px;
+}
+.mviz-grid > .item-12 { grid-column: span 12; }
+.mviz-grid > .item-8  { grid-column: span 8; }
+.mviz-grid > .item-4  { grid-column: span 4; }
+```
+
+For simple 2–3 component widgets you can also use claude.ai's recommended responsive pattern:
+
+```css
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+gap: 12px;
+```
+
+This auto-fits to the host's chosen width, which is the right choice when the exact column count is not load-bearing.
+
+**Format hint mapping**
+
+mviz format strings → JS formatters used inside Chart.js label/tooltip callbacks and metric-card text:
+
+| mviz `fmt` | JS expression (assume `v` is the number) |
+|---|---|
+| `currency_auto`, `auto` | Use the helper below — the smart-format contract has magnitude tiers that don't fit on one line |
+| `currency` | `'$' + v.toLocaleString('en-US')` (e.g. `1250000` → `$1,250,000`) |
+| `currency0k` | `'$' + Math.round(v/1000) + 'k'` (e.g. `125000` → `$125k`) |
+| `currency0m` | `'$' + (v/1e6).toFixed(1) + 'm'` (e.g. `1250000` → `$1.2m`) |
+| `pct`, `pct1` | `(v * 100).toFixed(1) + '%'` — mviz multiplies pct by 100, so pass the decimal (`0.15` → `15.0%`). For chart series mviz auto-detects whether values are already in pct units; mirror that if the data is ambiguous. |
+| `pct0` | `Math.round(v * 100) + '%'` (e.g. `0.15` → `15%`) |
+| `num0` | `v.toLocaleString('en-US')` (e.g. `1250` → `1,250`) |
+| `num1` | `v.toFixed(1)` (e.g. `1.234` → `1.2`) |
+| `num0k` | `Math.round(v/1000) + 'k'` (e.g. `1250` → `1k`) |
+
+The `currency_auto` / `auto` helper, mirroring mviz's `smartFormatNumber`. ~4 significant digits, magnitude tier with suffix, negatives in parentheses — match these exact thresholds so the inline render and the standalone report show identical numbers:
+
+```js
+function fmtAuto(v, sym = '') {
+  const neg = v < 0, abs = Math.abs(v);
+  let s;
+  if (abs >= 1e9) {
+    const x = abs / 1e9;
+    s = sym + (x >= 100 ? x.toFixed(1) : x >= 10 ? x.toFixed(2) : x.toFixed(3)) + 'b';
+  } else if (abs >= 1e6) {
+    const x = abs / 1e6;
+    s = sym + (x >= 100 ? x.toFixed(1) : x >= 10 ? x.toFixed(2) : x.toFixed(3)) + 'm';
+  } else if (abs >= 1e4) {
+    const x = abs / 1e3;
+    s = sym + (x >= 100 ? x.toFixed(1) : x.toFixed(2)) + 'k';
+  } else if (abs >= 1e3) {
+    s = sym + abs.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  } else {
+    s = sym + (abs === Math.floor(abs) ? abs : abs.toFixed(2));
+  }
+  return neg ? '(' + s + ')' : s;
+}
+// currency_auto: fmtAuto(v, '$')      → 1_250_000 → "$1.250m", 12_500 → "$12.50k", 1_250 → "$1,250"
+// auto:          fmtAuto(v)            → 1_250_000 →  "1.250m", 12_500 →  "12.50k", 1_250 →  "1,250"
+```
+
+Always `Math.round` / `.toFixed(n)` displayed numbers — `0.1 + 0.2` is `0.30000000000000004` and that artifact will leak into the widget if you don't.
+
+**Color mapping**
+
+Chart.js renders to `<canvas>` and cannot resolve CSS variables. Use hardcoded hex from claude.ai's color ramps (the `c-{ramp}` stops listed in the `visualize:read_me` design module). A safe default palette for mviz series:
+
+- Primary (mviz blue `#0777b3`) → `c-blue` 600 `#185FA5`
+- Secondary (mviz orange `#bd4e35`) → `c-coral` 600 `#993C1D`
+- Positive (mviz green `#2d7a00`) → `c-green` 600 `#3B6D11`
+- Warning (mviz amber `#e18727`) → `c-amber` 600 `#854F0B`
+- Error (mviz red `#bc1200`) → `c-red` 600 `#A32D2D`
+- Tertiary / neutral → `c-gray` 600 `#5F5E5A`
+
+For HTML elements (cards, table borders, text), use `var(--color-text-primary)` / `var(--color-background-secondary)` / `var(--color-border-tertiary)` and friends — they auto-adapt to dark mode.
+
+### Chart.js setup (canonical patterns from `visualize:read_me`)
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+```
+
+Wrap every canvas in a sized div:
+
+```html
+<div style="position: relative; width: 100%; height: 240px;">
+  <canvas id="c1" role="img" aria-label="Sales by region — NA $540k, EU $380k, APAC $220k, LATAM $110k">
+    Sales by region (bar chart). NA 540, EU 380, APAC 220, LATAM 110.
+  </canvas>
+</div>
+```
+
+Constraints to honor:
+
+- `responsive: true, maintainAspectRatio: false` — height goes on the wrapper div only, never on the canvas itself.
+- Horizontal bar charts: wrapper height ≥ `(bars * 40) + 80` px.
+- ≤12 categories where every label must be visible: `scales.x.ticks: { autoSkip: false, maxRotation: 45 }`.
+- Bubble/scatter: pad `scales.{x,y}.{min,max}` ~10 % beyond data range so radii don't clip.
+- Negative currency: `-$5M` not `$-5M` — sign before symbol. Use a formatter `(v) => (v < 0 ? '-' : '') + '$' + Math.abs(v) + 'M'`.
+
+Default Chart.js legends use round dots and no values — disable them and emit your own legend as inline HTML (small color squares, tight spacing, include the value/percentage when categorical):
+
+```js
+plugins: { legend: { display: false } }
+```
+
+```html
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px;
+            font-size: 12px; color: var(--color-text-secondary);">
+  <span style="display: flex; align-items: center; gap: 4px;">
+    <span style="width: 10px; height: 10px; border-radius: 2px; background: #185FA5;"></span>NA $540k
+  </span>
+  <!-- repeat -->
+</div>
+```
+
+### Metric card (for `big_value` and `delta`)
+
+```html
+<div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md);
+            padding: 1rem;">
+  <div style="font-size: 13px; color: var(--color-text-secondary);">Q3 Revenue</div>
+  <div style="font-size: 24px; font-weight: 500; color: var(--color-text-primary);
+              line-height: 1; margin-top: 4px;">$1.250m</div>
+</div>
+```
+
+Use in grids of 2–4 with `gap: 12px`. For `delta`, add a small directional indicator with `color: var(--color-success)` or `var(--color-danger)`.
+
+### Worked example
+
+Spec (mviz markdown):
+
+````markdown
+---
+title: Q3 sales
+---
+
+```big_value size=[4,2]
+{"value": 1250000, "label": "Q3 Revenue", "format": "currency_auto"}
+```
+```big_value size=[4,2]
+{"value": 0.184, "label": "Growth", "format": "pct1"}
+```
+
+```bar size=[16,5]
+{"title": "Sales by region", "x": "region", "y": "sales", "format": "currency0k",
+ "data": [{"region":"NA","sales":540000},{"region":"EU","sales":380000},
+          {"region":"APAC","sales":220000},{"region":"LATAM","sales":110000}]}
+```
+````
+
+Inline render (the `widget_code` you pass to `visualize:show_widget`):
+
+```html
+<h2 class="sr-only">Q3 sales overview: $1.250m revenue, 18.4% growth, regional breakdown.</h2>
+<div style="display: grid; grid-template-columns: repeat(16, 1fr); gap: 12px;">
+  <div style="grid-column: span 4; background: var(--color-background-secondary);
+              border-radius: var(--border-radius-md); padding: 1rem;">
+    <div style="font-size: 13px; color: var(--color-text-secondary);">Q3 Revenue</div>
+    <div style="font-size: 24px; font-weight: 500; margin-top: 4px;">$1.250m</div>
+  </div>
+  <div style="grid-column: span 4; background: var(--color-background-secondary);
+              border-radius: var(--border-radius-md); padding: 1rem;">
+    <div style="font-size: 13px; color: var(--color-text-secondary);">Growth</div>
+    <div style="font-size: 24px; font-weight: 500; margin-top: 4px;
+                color: var(--color-success);">+18.4%</div>
+  </div>
+  <div style="grid-column: span 16;">
+    <div style="font-size: 14px; font-weight: 500; margin-bottom: 8px;">Sales by region</div>
+    <div style="position: relative; width: 100%; height: 240px;">
+      <canvas id="mviz-bar-1" role="img"
+              aria-label="Sales by region — NA $540k, EU $380k, APAC $220k, LATAM $110k">
+        NA 540, EU 380, APAC 220, LATAM 110.
+      </canvas>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+  new Chart(document.getElementById('mviz-bar-1'), {
+    type: 'bar',
+    data: {
+      labels: ['NA', 'EU', 'APAC', 'LATAM'],
+      datasets: [{ label: 'Sales', data: [540000, 380000, 220000, 110000], backgroundColor: '#185FA5' }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { callback: (v) => '$' + Math.round(v/1000) + 'k' } },
+        x: { ticks: { autoSkip: false, maxRotation: 45 } },
+      },
+    },
+  });
+</script>
+```
+
+### Constraints + things you must not do
+
+- **Do not invoke the `mviz` CLI for `show_widget` output.** This path renders without it. The CLI is only for standalone HTML reports.
+- **Do not paste mviz's own HTML into `show_widget`.** mviz emits its own styled fragments — they will not match the chat host and the bytes are wasted.
+- No `<!DOCTYPE>`, `<html>`, `<head>`, or `<body>` in the widget — `show_widget` rejects documents.
+- No `position: fixed`. It collapses the iframe's auto-sized viewport.
+- Only load from the allowlist: `cdnjs.cloudflare.com`, `esm.sh`, `cdn.jsdelivr.net`, `unpkg.com`, `fonts.googleapis.com`, `fonts.gstatic.com`. Chart.js from `cdnjs.cloudflare.com` is the canonical source.
+- Tables with more than ~3 columns or any prose-y content: render as markdown in your response text instead of inside the widget. The `visualize:read_me` design guide is explicit about this.
+
+### Falling back to the CLI renderer
+
+When the inline renderer isn't a fit, the spec is still useful — pipe it through the CLI:
+
+- **Chart type with no Chart.js equivalent** (sankey, heatmap, calendar, etc.) — render via the CLI, offer the file. Mention that the mviz design system kicks in for the standalone output.
+- **`visualize:show_widget` is not available** — render via the CLI and present as an artifact.
+- **User is in Claude Code** — render via the CLI, write the file path, they'll open it in a browser. No inline widget surface in the TUI.
+- **Visualization exceeds the inline size budget** (15+ components, dense tables with sparklines, multi-section reports) — render via the CLI. Offer inline as a follow-up if they want a smaller summary view.
+- **Single tiny visual** (one sparkline, one 3-cell metric) — consider hand-rolling SVG directly via `show_widget` without going through the mviz spec at all. mviz earns its keep when composing multiple components; for a one-off icon it's overkill.
 
 ## Custom Themes
 
